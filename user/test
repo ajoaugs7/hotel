@@ -1,0 +1,33 @@
+<?php
+    // Database connection
+    $conn = new mysqli("localhost", "root", "", "hotel");
+    
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // SQL query to fetch all categories
+    $sql = "SELECT c_id, c_name, c_image FROM category";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Loop through the results and display each category
+        while ($row = $result->fetch_assoc()) {
+            echo "<div class='category-card'>";
+            echo "<h2>" . $row['c_name'] . "</h2>";
+            echo "<img src='user" . $row['c_image'] . "' alt='" . $row['c_name'] . "'>";
+            echo "<form action='category_details.php' method='GET'>";
+            echo "<input type='hidden' name='c_id' value='" . $row['c_id'] . "'>";
+            echo "<a href='check_in.php?c_id=" . urlencode($row['c_id']) . "' class='view-details-link'>"; // Link to category details
+            echo "<button type='button'>To book</button>"; // Button styled as link
+            echo "</a>";
+            echo "</div>";
+        }
+    } else {
+        echo "<p>No categories available.</p>";
+    }
+
+    // Close the connection
+    $conn->close();
+    ?>
